@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base rules — everything here uses tokens via Tailwind's theme() */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: theme(colors.cream);
+    color: theme(colors.espresso);
+    font-family: theme(fontFamily.body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Visible keyboard focus, everywhere — rust ring per tokens */
+  :focus-visible {
+    outline: 2px solid theme(colors.rust);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: theme(colors.tan);
+    color: theme(colors.espresso);
+  }
+
+  /* Page transition choreography (View Transitions API) — the leaving
+     page melts away while the arriving page fades in with a gentle
+     rise. Values per tokens: pageFade 420ms, revealEase, 12px rise. */
+  @keyframes vt-page-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes vt-page-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  }
+  ::view-transition-old(page) {
+    animation: vt-page-out 260ms cubic-bezier(0.25, 0.1, 0.25, 1) both;
+  }
+  ::view-transition-new(page) {
+    animation: vt-page-in 420ms cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  }
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 420ms;
+  }
+
+  /* Reduced motion = a perfectly still site. Framer Motion also checks
+     this via useReducedMotion; this rule catches all CSS transitions. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+      animation: none !important;
+      scroll-behavior: auto !important;
+    }
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation: none !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Book-spine text runs down the spine, like a real bookshelf */
+  .writing-vertical {
+    writing-mode: vertical-rl;
+  }
+
+  /* Hide scrollbars on the shelf without disabling scroll */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Editorial drop cap — opens every review (readingProposed tokens) */
+  .drop-cap::first-letter {
+    float: left;
+    font-family: theme(fontFamily.display);
+    font-size: 3.1em;
+    font-weight: 500;
+    line-height: 0.85;
+    padding: 0.04em 0.12em 0 0;
+    color: theme(colors.rust);
+  }
+}

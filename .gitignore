@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# local tooling config
+.claude/
+
+# safety nets (site/.gitignore is the primary guard)
+node_modules/
+.next/
